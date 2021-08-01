@@ -2,8 +2,11 @@ from googleapiclient.discovery import build
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import base64
 
 ## streamlit sidebar
+st.set_page_config(layout='wide')
+
 st.sidebar.title('r-index Analysis')
 
 channel_id = st.sidebar.text_input("Enter channel id", 'UCwIzJ_UWnn1Uc8d1H8nCuUA')
@@ -110,12 +113,23 @@ r_index = format((df.view_count[:10].sum()/10)/int(subscriber_count), '.2f')
 st.subheader(r_index)
 st.text('Subscriber: ' + subscriber_count+' , Videos: '+ str(len(df)))
 
-
+st.subheader('Views over time')
 fig = px.bar(df, x="published", y="view_count", hover_name="title")
-fig = fig.update_layout(yaxis_title=None, xaxis_title=None, width=800)
-st.plotly_chart(fig)
+fig = fig.update_layout(yaxis_title=None, xaxis_title=None, autosize = True, height = 280, margin=dict(l=0,r=0,b=0,t=0))
+st.plotly_chart(fig, use_container_width=True)
 
+#plt.bar(df[['published', 'view_count']])
+#fig = df.plot.bar(x='published', y='view_count')
+#st.show(fig)
 #st.bar_chart(df[['published','view_count']], use_container_width=True)
 
+st.subheader('Channel data')
 st.dataframe(df)
 
+def filedownload(df):
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="youtube data.csv">Download CSV file</a>'
+    return href
+
+st.markdown(filedownload(df), unsafe_allow_html=True)
