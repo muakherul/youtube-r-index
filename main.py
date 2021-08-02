@@ -2,14 +2,14 @@ from googleapiclient.discovery import build
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+from plotly.subplots import make_subplots
 import base64
 
 ## streamlit sidebar
 st.set_page_config(layout='wide')
+st.sidebar.title('Channel r-index')
 
-st.sidebar.title('r-index Analysis')
-
-channel_id = st.sidebar.text_input("Enter channel id", 'UCwIzJ_UWnn1Uc8d1H8nCuUA')
+channel_id = st.sidebar.text_input("Enter any youtube channel id: ", 'UCwIzJ_UWnn1Uc8d1H8nCuUA')
 api_key = 'AIzaSyDeeQd-yrWvVB2pplFO1XjkDTGyqftydFU'
 
 youtube = build('youtube', 'v3', developerKey = api_key)
@@ -113,15 +113,21 @@ r_index = format((df.view_count[:10].sum()/10)/int(subscriber_count), '.2f')
 st.subheader(r_index)
 st.text('Subscriber: ' + subscriber_count+' , Videos: '+ str(len(df)))
 
-st.subheader('Views over time')
-fig = px.bar(df, x="published", y="view_count", hover_name="title")
-fig = fig.update_layout(yaxis_title=None, xaxis_title=None, autosize = True, height = 280, margin=dict(l=0,r=0,b=0,t=0))
-st.plotly_chart(fig, use_container_width=True)
+st.subheader('Views & Comments over time')
+st.text('(zoom in & pan for better view)')
 
-#plt.bar(df[['published', 'view_count']])
-#fig = df.plot.bar(x='published', y='view_count')
-#st.show(fig)
-#st.bar_chart(df[['published','view_count']], use_container_width=True)
+subfig = make_subplots(specs=[[{"secondary_y": True}]])
+
+fig = px.bar(df, x="published", y="view_count", hover_name="title")
+fig = fig.update_traces(marker={'color': '#345995'})
+
+fig2 = px.line(df, x="published", y="comment_count")
+fig2 = fig2.update_traces(yaxis="y2",  line_color='#D4AE96', line_width=.7)
+
+subfig = subfig.add_traces(fig.data + fig2.data)
+subfig = subfig.update_layout(yaxis_title=None, xaxis_title=None, showlegend=True, autosize = True, height = 280, margin=dict(l=0,r=0,b=0,t=0))
+
+st.plotly_chart(subfig, use_container_width=True)
 
 st.subheader('Channel data')
 st.dataframe(df)
@@ -129,7 +135,8 @@ st.dataframe(df)
 def filedownload(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="youtube data.csv">Download CSV file</a>'
+    href = f'<a href="data:file/csv;base64,{b64}" download="youtube data.csv">Download these data (csv)</a>'
     return href
 
 st.markdown(filedownload(df), unsafe_allow_html=True)
+
