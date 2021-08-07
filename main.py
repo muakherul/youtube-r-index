@@ -110,8 +110,18 @@ df.drop('description', axis=1, inplace=True)
 ## r-index calculation
 r_index = format((df.view_count[:10].sum()/10)/int(subscriber_count), '.2f')
 
-st.subheader(r_index)
-st.text('Subscriber: ' + subscriber_count+' , Videos: '+ str(len(df)))
+col1, col2, col3, col4 = st.beta_columns([1,2.5, 2, 3.5])
+with col1:
+    if (r_index < str(0.5)):
+        st.error(r_index)
+    else:
+        st.success(r_index)
+with col2:
+    st.info('Subscribers: ' + subscriber_count)
+with col3:
+    st.info('Videos: '+ str(len(df)))
+with col4:
+    st.info('Views: '+ str(df.view_count.sum()))
 
 st.subheader('Views & Comments over time')
 st.text('(zoom in & pan for better view)')
