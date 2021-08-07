@@ -10,6 +10,14 @@ st.set_page_config(layout='wide')
 st.sidebar.title('Channel r-index')
 
 channel_id = st.sidebar.text_input("Enter any youtube channel id: ", 'UCwIzJ_UWnn1Uc8d1H8nCuUA')
+
+st.sidebar.markdown(""" <style> .big-font { 
+    font-size:11px !important;} </style>
+    """, unsafe_allow_html=True)
+
+st.sidebar.markdown('<p class="big-font">* r-index = total views in last 10 uploaded videos / total subscribers</p>', unsafe_allow_html=True)
+
+
 api_key = 'AIzaSyDeeQd-yrWvVB2pplFO1XjkDTGyqftydFU'
 
 youtube = build('youtube', 'v3', developerKey = api_key)
