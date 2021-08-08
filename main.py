@@ -162,5 +162,5 @@ st.markdown(filedownload(df), unsafe_allow_html=True)
 ##GA
 HtmlFile = open('tracking.html', 'r', encoding='utf-8')
 source_code = HtmlFile.read()
-#print(source_code)
+print(source_code)
 components.html(source_code, height=10)
