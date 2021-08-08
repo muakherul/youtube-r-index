@@ -18,7 +18,7 @@ st.sidebar.markdown(""" <style> .big-font {
 st.sidebar.markdown('<p class="big-font">* r-index = total views in last 10 uploaded videos / total subscribers</p>', unsafe_allow_html=True)
 
 
-api_key = 'AIzaSyDeeQd-yrWvVB2pplFO1XjkDTGyqftydFU'
+api_key = 'AIzaSyCqu4szzgFxq8S-LUqNBvASz2hTMXxXt5w'
 
 youtube = build('youtube', 'v3', developerKey = api_key)
 
