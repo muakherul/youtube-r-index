@@ -4,6 +4,8 @@ import streamlit as st
 import plotly.express as px
 from plotly.subplots import make_subplots
 import base64
+import streamlit.components.v1 as components
+
 
 ## streamlit sidebar
 st.set_page_config(layout='wide')
